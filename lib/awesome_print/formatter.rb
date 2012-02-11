@@ -66,7 +66,7 @@ module AwesomePrint
       if a.instance_variable_defined?('@__awesome_methods__')
         methods_array(a)
       elsif @options[:multiline]
-        width = (a.size - 1).to_s.size 
+        width = (a.size - 1).to_s.size
 
         data = a.inject([]) do |arr, item|
           index = indent
@@ -85,7 +85,7 @@ module AwesomePrint
 
     # Format a hash. If @options[:indent] if negative left align hash keys.
     #------------------------------------------------------------------------------
-    def awesome_hash(h)
+    def awesome_hash(h, force_unlimited=false)
       return "{}" if h == {}
 
       keys = @options[:sort_keys] ? h.keys.sort { |a, b| a.to_s <=> b.to_s } : h.keys
@@ -94,17 +94,17 @@ module AwesomePrint
           [ @inspector.awesome(key), h[key] ]
         end
       end
-      
+
       width = data.map { |key, | key.size }.max || 0
       width += @indentation if @options[:indent] > 0
-  
+
       data = data.map do |key, value|
         indented do
           align(key, width) << colorize(" => ", :hash) << @inspector.awesome(value)
         end
       end
 
-      data = limited(data, width, :hash => true) if should_be_limited?
+      data = limited(data, width, :hash => true) if !force_unlimited && should_be_limited?
       if @options[:multiline]
         "{\n" << data.join(",\n") << "\n#{outdent}}"
       else

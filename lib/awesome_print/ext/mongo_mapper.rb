@@ -15,8 +15,14 @@ module AwesomePrint
     #------------------------------------------------------------------------------
     def cast_with_mongo_mapper(object, type)
       cast = cast_without_mongo_mapper(object, type)
-      if defined?(::MongoMapper::Document) && object.is_a?(Class) && (object.ancestors & [ ::MongoMapper::Document, ::MongoMapper::EmbeddedDocument ]).size > 0
-        cast = :mongo_mapper_class
+      if defined?(::MongoMapper::Document)
+        if object.is_a?(Class) && (object.ancestors & [ ::MongoMapper::Document, ::MongoMapper::EmbeddedDocument ]).size > 0
+          cast = :mongo_mapper_class
+        elsif (object.class.ancestors & [ ::MongoMapper::Document, ::MongoMapper::EmbeddedDocument ]).size > 0
+          cast = :mongo_mapper_instance
+        elsif object.is_a?(::BSON::ObjectId)
+          cast = :mongo_mapper_bson_id
+        end
       end
       cast
     end
@@ -31,6 +37,27 @@ module AwesomePrint
         hash
       end
       "class #{object} < #{object.superclass} " << awesome_hash(data)
+    end
+
+    # Format MongoMapper Document object.
+    #------------------------------------------------------------------------------
+    def awesome_mongo_mapper_instance(object)
+      return object.inspect if !defined?(::ActiveSupport::OrderedHash)
+
+      data = object.attributes.sort_by { |key| key }.inject(::ActiveSupport::OrderedHash.new) do |hash, c|
+        hash[c[0].to_sym] = c[1]
+        hash
+      end
+      if !object.errors.empty?
+        data = {:errors => object.errors, :attributes => data}
+      end
+      "#{object} #{awesome_hash(data,true)}"
+    end
+
+    # Format BSON::ObjectId
+    #------------------------------------------------------------------------------
+    def awesome_mongo_mapper_bson_id(object)
+      object.inspect
     end
   end
 end
