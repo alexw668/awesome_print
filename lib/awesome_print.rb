@@ -7,7 +7,7 @@
 # AwesomePrint might be loaded implicitly through ~/.irbrc so do nothing
 # for subsequent requires.
 #
-unless defined?(AwesomePrint)
+# unless defined?(AwesomePrint)
   %w(array string method object class kernel).each do |file|
     require File.dirname(__FILE__) + "/awesome_print/core_ext/#{file}"
   end
@@ -27,4 +27,4 @@ unless defined?(AwesomePrint)
   require File.dirname(__FILE__) + "/awesome_print/ext/mongo_mapper"   if defined?(MongoMapper)
   require File.dirname(__FILE__) + "/awesome_print/ext/mongoid"        if defined?(Mongoid)
   require File.dirname(__FILE__) + "/awesome_print/ext/nokogiri"       if defined?(Nokogiri)
-end
+# end
