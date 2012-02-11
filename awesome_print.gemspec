@@ -3,16 +3,16 @@
 # Awesome Print is freely distributable under the terms of MIT license.
 # See LICENSE file or http://www.opensource.org/licenses/mit-license.php
 #------------------------------------------------------------------------------
-require "rake"
+# require "rake"
 require File.dirname(__FILE__) + "/lib/awesome_print/version"
 
-task :default => :spec
+# task :default => :spec
 
-desc "Run all awesome_print gem specs"
-task :spec do
-  # Run plain rspec command without RSpec::Core::RakeTask overrides.
-  exec "rspec -c spec"
-end
+# desc "Run all awesome_print gem specs"
+# task :spec do
+#   # Run plain rspec command without RSpec::Core::RakeTask overrides.
+#   exec "rspec -c spec"
+# end
 
 Gem::Specification.new do |s|
   s.name        = "awesome_print"
@@ -27,8 +27,9 @@ Gem::Specification.new do |s|
 
   s.rubyforge_project = "awesome_print"
 
-  s.files         = Rake::FileList["[A-Z]*", "lib/**/*.rb", "spec/*", ".gitignore"]
-  s.test_files    = Rake::FileList["spec/*"]
+  # s.files         = Rake::FileList["[A-Z]*", "lib/**/*.rb", "spec/*", ".gitignore"]
+  s.files         = Dir.glob("{lib,test,spec}/**/*") + %w[.gitignore]
+  # s.test_files    = Rake::FileList["spec/*"]
   s.executables   = []
   s.require_paths = ["lib"]
 
